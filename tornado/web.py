@@ -796,6 +796,46 @@ class RequestHandler:
             return self.request.cookies[name].value
         return default
 
+    def _validate_cookie_attributes(
+        self,
+        name: str,
+        value: str,
+        domain: str | None,
+        path: str,
+        samesite: str | None,
+    ) -> None:
+        """Validates cookie name, value, and attributes for invalid characters.
+
+        Raises ValueError if the cookie value contains control characters.
+        Raises http.cookies.CookieError if attributes contain invalid characters.
+        """
+        if re.search(r"[\x00-\x20]", value):
+            # Legacy check for control characters in cookie values. This check is no longer needed
+            # since the cookie library escapes these characters correctly now. It will be removed
+            # in the next feature release.
+            raise ValueError(f"Invalid cookie {name!r}: {value!r}")
+
+        for attr_name, attr_value in [
+            ("name", name),
+            ("domain", domain),
+            ("path", path),
+            ("samesite", samesite),
+        ]:
+            # Cookie attributes may not contain control characters or semicolons (except when
+            # escaped in the value). A check for control characters was added to the http.cookies
+            # library in a Feb 2026 security release; as of March it still does not check for
+            # semicolons.
+            #
+            # When a semicolon check is added to the standard library (and the release has had time
+            # for adoption), this check may be removed, but be mindful of the fact that this may
+            # change the timing of the exception (to the generation of the Set-Cookie header in
+            # flush()). We may want to add a call to self._new_cookie.output() at the end of this
+            # method to ensure that exceptions are raised when they will be most useful.
+            if attr_value is not None and re.search(r"[\x00-\x20\x3b\x7f]", attr_value):
+                raise http.cookies.CookieError(
+                    f"Invalid cookie attribute {attr_name}={attr_value!r} for cookie {name!r}"
+                )
+
     def set_cookie(
         self,
         name: str,
@@ -860,7 +900,12 @@ class RequestHandler:
                 raise http.cookies.CookieError(
                     f"Invalid cookie attribute {attr_name}={attr_value!r} for cookie {name!r}"
                 )
-         # _new_cookie é agora uma property que faz lazy initialization
+
+        # Validate cookie name, value, and attributes
+        self._validate_cookie_attributes(name, value, domain, path, samesite)
+
+        if not hasattr(self, "_new_cookie"):
+            self._new_cookie: http.cookies.SimpleCookie = http.cookies.SimpleCookie()
         if name in self._new_cookie:
             del self._new_cookie[name]
         self._new_cookie[name] = value
@@ -1146,6 +1191,68 @@ class RequestHandler:
             self.set_header("Content-Type", "application/json; charset=UTF-8")
         chunk = utf8(chunk)
         self._write_buffer.append(chunk)
+
+    def _add_if_present(self, container: list, value: Any) -> None:
+        """Adds a value to the container if it's not empty/None."""
+        if value:
+            container.append(utf8(value))
+
+    def _add_file_or_list(
+        self, container: list, value: Any
+    ) -> None:
+        """Adds a file path or list of paths to the container.
+
+        If value is a string or bytes, appends the unicode version.
+        If value is a list/iterable, extends the container with all items.
+        """
+        if value:
+            if isinstance(value, (unicode_type, bytes)):
+                container.append(_unicode(value))
+            else:
+                container.extend(value)
+
+    def _process_module_assets(self, module: Any, assets: dict) -> None:
+        """Processes assets from a single module and adds them to the assets dict.
+
+        Args:
+            module: A module object with embedded_javascript, javascript_files,
+                   embedded_css, css_files, html_head, and html_body methods.
+            assets: Dictionary to store collected assets with keys:
+                   'js_embed', 'js_files', 'css_embed', 'css_files',
+                   'html_heads', 'html_bodies'
+        """
+        self._add_if_present(assets["js_embed"], module.embedded_javascript())
+        self._add_file_or_list(assets["js_files"], module.javascript_files())
+        self._add_if_present(assets["css_embed"], module.embedded_css())
+        self._add_file_or_list(assets["css_files"], module.css_files())
+        self._add_if_present(assets["html_heads"], module.html_head())
+        self._add_if_present(assets["html_bodies"], module.html_body())
+
+    def _collect_module_assets(self) -> dict[str, list]:
+        """Collects all assets (JS, CSS, HTML) from active modules.
+
+        Returns:
+            A dictionary containing lists of:
+            - 'js_embed': Embedded JavaScript code
+            - 'js_files': JavaScript file paths
+            - 'css_embed': Embedded CSS code
+            - 'css_files': CSS file paths
+            - 'html_heads': HTML to insert in <head>
+            - 'html_bodies': HTML to insert in <body>
+        """
+        assets = {
+            "js_embed": [],
+            "js_files": [],
+            "css_embed": [],
+            "css_files": [],
+            "html_heads": [],
+            "html_bodies": [],
+        }
+
+        for module in getattr(self, "_active_modules", {}).values():
+            self._process_module_assets(module, assets)
+
+        return assets
 
     def _extract_modules_assets(self) -> dict[str, list]:
         """Extract JS, CSS, and HTML assets from active modules.
@@ -1984,61 +2091,99 @@ class RequestHandler:
                     break
         return match
 
+    def _validate_request(self, *args: bytes, **kwargs: bytes) -> None:
+        """Validates the request method, parses body, and checks XSRF tokens.
+
+        This method handles:
+        - Validating HTTP method is supported
+        - Parsing request body (non-streaming mode)
+        - Setting up path arguments and kwargs
+        - Checking XSRF cookies if enabled
+
+        Raises:
+            HTTPError: If method is not supported (405) or body is invalid (400)
+        """
+        if self.request.method not in self.SUPPORTED_METHODS:
+            raise HTTPError(405)
+
+        # If we're not in stream_request_body mode, this is the place where we parse the body.
+        if not _has_stream_request_body(self.__class__):
+            try:
+                self.request._parse_body()
+            except httputil.HTTPInputError as e:
+                raise HTTPError(400, "Invalid body: %s" % e) from e
+
+        self.path_args = [self.decode_argument(arg) for arg in args]
+        self.path_kwargs = {
+            k: self.decode_argument(v, name=k) for (k, v) in kwargs.items()
+        }
+
+        # If XSRF cookies are turned on, reject form submissions without the proper cookie
+        if self.request.method not in (
+            "GET",
+            "HEAD",
+            "OPTIONS",
+        ) and self.application.settings.get("xsrf_cookies"):
+            self.check_xsrf_cookie()
+
+    async def _prepare_request(self) -> bool:
+        """Prepares the request and waits for streaming body if needed.
+
+        This method handles:
+        - Calling the prepare() hook
+        - Signaling when prepare() is complete
+        - Waiting for the body in streaming mode
+
+        Returns:
+            True if request finished before execution; False otherwise
+        """
+        result = self.prepare()
+        if result is not None:
+            result = await result  # type: ignore
+
+        if self._prepared_future is not None:
+            # Tell the Application we've finished with prepare()
+            # and are ready for the body to arrive.
+            future_set_result_unless_cancelled(self._prepared_future, None)
+
+        if self._finished:
+            return True
+
+        if _has_stream_request_body(self.__class__):
+            # In streaming mode request.body is a Future that signals
+            # the body has been completely received.  The Future has no
+            # result; the data has been passed to self.data_received instead.
+            try:
+                await self.request._body_future
+            except iostream.StreamClosedError:
+                return True
+
+        return False
+
+    async def _execute_handler(self) -> None:
+        """Executes the HTTP method handler (GET, POST, etc.).
+
+        This method retrieves and calls the appropriate handler method
+        based on the HTTP request method, and handles auto-finishing.
+        """
+        method = getattr(self, self.request.method.lower())
+        result = method(*self.path_args, **self.path_kwargs)
+        if result is not None:
+            result = await result
+
+        if self._auto_finish and not self._finished:
+            self.finish()
+
     async def _execute(
         self, transforms: list["OutputTransform"], *args: bytes, **kwargs: bytes
     ) -> None:
         """Executes this request with the given output transforms."""
         self._transforms = transforms
         try:
-            if self.request.method not in self.SUPPORTED_METHODS:
-                raise HTTPError(405)
-
-            # If we're not in stream_request_body mode, this is the place where we parse the body.
-            if not _has_stream_request_body(self.__class__):
-                try:
-                    self.request._parse_body()
-                except httputil.HTTPInputError as e:
-                    raise HTTPError(400, "Invalid body: %s" % e) from e
-
-            self.path_args = [self.decode_argument(arg) for arg in args]
-            self.path_kwargs = {
-                k: self.decode_argument(v, name=k) for (k, v) in kwargs.items()
-            }
-            # If XSRF cookies are turned on, reject form submissions without
-            # the proper cookie
-            if self.request.method not in (
-                "GET",
-                "HEAD",
-                "OPTIONS",
-            ) and self.application.settings.get("xsrf_cookies"):
-                self.check_xsrf_cookie()
-
-            result = self.prepare()
-            if result is not None:
-                result = await result  # type: ignore
-            if self._prepared_future is not None:
-                # Tell the Application we've finished with prepare()
-                # and are ready for the body to arrive.
-                future_set_result_unless_cancelled(self._prepared_future, None)
-            if self._finished:
+            self._validate_request(*args, **kwargs)
+            if await self._prepare_request():
                 return
-
-            if _has_stream_request_body(self.__class__):
-                # In streaming mode request.body is a Future that signals
-                # the body has been completely received.  The Future has no
-                # result; the data has been passed to self.data_received
-                # instead.
-                try:
-                    await self.request._body_future
-                except iostream.StreamClosedError:
-                    return
-
-            method = getattr(self, self.request.method.lower())
-            result = method(*self.path_args, **self.path_kwargs)
-            if result is not None:
-                result = await result
-            if self._auto_finish and not self._finished:
-                self.finish()
+            await self._execute_handler()
         except Exception as e:
             try:
                 self._handle_request_exception(e)
@@ -3016,20 +3161,51 @@ class StaticFileHandler(RequestHandler):
         - start, end: Byte range boundaries (None if full content)
         - status_code: HTTP status to set (None for normal, 206 for partial, 416 for invalid)
         """
-        request_range = None
-        if range_header:
-            # As per RFC 2616 14.16, if an invalid Range header is specified,
-            # the request will be treated as if the header didn't exist.
-            request_range = httputil._parse_request_range(range_header)
-
-        if not request_range:
+        range_spec = self._parse_and_validate_range(range_header, size)
+        if range_spec is None:
             return None, None, None
+        if range_spec is False:
+            self.set_status(416)  # Range Not Satisfiable
+            self.set_header("Content-Type", "text/plain")
+            self.set_header("Content-Range", f"bytes */{size}")
+            return None, None, 416
+        (start, end), should_set_206 = range_spec  # type: ignore[misc]
+        if should_set_206:
+            self.set_status(206)  # Partial Content
+            self.set_header(
+                "Content-Range", httputil._get_content_range(start, end, size)
+            )
+            return start, end, 206
+        return start, end, None
+
+    def _parse_and_validate_range(
+        self, range_header: str | None, size: int
+    ) -> tuple[tuple[int | None, int | None], bool] | None | bool:
+        """Parse and validate the Range header.
+
+        Returns a tuple of ((start, end), should_set_206) if valid range requested.
+        Returns None if no range header or header is invalid (should return 200).
+        Returns False if range is unsatisfiable (should return 416).
+        """
+        if not range_header:
+            return None
+
+        # As per RFC 2616 14.16, if an invalid Range header is specified,
+        # the request will be treated as if the header didn't exist.
+        request_range = httputil._parse_request_range(range_header)
+        if not request_range:
+            # Invalid header format - treat as if header didn't exist (return None for 200)
+            return None
 
         start, end = request_range
+
+        # Adjust negative start (suffix-byte-range-spec)
         if start is not None and start < 0:
             start += size
             if start < 0:
                 start = 0
+
+        # Validate range satisfiability
         if (
             start is not None
             and (start >= size or (end is not None and start >= end))
@@ -3040,28 +3216,23 @@ class StaticFileHandler(RequestHandler):
             # https://tools.ietf.org/html/rfc7233#section-2.1
             # A byte-range-spec is invalid if the last-byte-pos value is present
             # and less than the first-byte-pos.
-            self.set_status(416)  # Range Not Satisfiable
-            self.set_header("Content-Type", "text/plain")
-            self.set_header("Content-Range", f"bytes */{size}")
-            return None, None, 416
+            # Return False to indicate unsatisfiable range (HTTP 416)
+            return False
 
+        # Cap end at file size
         if end is not None and end > size:
             # Clients sometimes blindly use a large range to limit their
             # download size; cap the endpoint at the actual file size.
             end = size
 
+        # Determine if we should return 206 Partial Content
         # Note: only return HTTP 206 if less than the entire range has been
         # requested. Not only is this semantically correct, but Chrome
         # refuses to play audio if it gets an HTTP 206 in response to
         # ``Range: bytes=0-``.
-        if size != (end or size) - (start or 0):
-            self.set_status(206)  # Partial Content
-            self.set_header(
-                "Content-Range", httputil._get_content_range(start, end, size)
-            )
-            return start, end, 206
+        should_set_206 = size != (end or size) - (start or 0)
 
-        return start, end, None
+        return (start, end), should_set_206
 
     def _calculate_content_length(
         self, size: int, start: int | None, end: int | None
@@ -3089,6 +3260,7 @@ class StaticFileHandler(RequestHandler):
                 await self.flush()
             except iostream.StreamClosedError:
                 return
+
 
     async def get(self, path: str, include_body: bool = True) -> None:
         # Set up our path instance variables.

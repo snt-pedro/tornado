@@ -1097,6 +1097,245 @@ def _process_loop_control(
      return True
 
 
+def _parse_find_token(reader: _TemplateReader) -> int:
+    """Find the next template directive token position.
+    
+    Returns the position of the opening curly brace, or -1 if EOF.
+    """
+    curly = 0
+    while True:
+        curly = reader.find("{", curly)
+        if curly == -1 or curly + 1 == reader.remaining():
+            # EOF
+            return -1
+        # If the first curly brace is not the start of a special token,
+        # start searching from the character after it
+        if reader[curly + 1] not in ("{", "%", "#"):
+            curly += 1
+            continue
+        # When there are more than 2 curlies in a row, use the
+        # innermost ones.  This is useful when generating languages
+        # like latex where curlies are also meaningful
+        if (
+            curly + 2 < reader.remaining()
+            and reader[curly + 1] == "{"
+            and reader[curly + 2] == "{"
+        ):
+            curly += 1
+            continue
+        break
+    return curly
+
+
+def _handle_comment(reader: _TemplateReader) -> None:
+    """Process a comment block {# ... #}."""
+    end = reader.find("#}")
+    if end == -1:
+        reader.raise_parse_error("Missing end comment #}")
+    reader.consume(end).strip()
+    reader.consume(2)
+
+
+def _handle_expression(
+    reader: _TemplateReader, line: int, body: _ChunkList
+) -> None:
+    """Process an expression block {{ ... }}."""
+    end = reader.find("}}")
+    if end == -1:
+        reader.raise_parse_error("Missing end expression }}")
+    contents = reader.consume(end).strip()
+    reader.consume(2)
+    if not contents:
+        reader.raise_parse_error("Empty expression")
+    body.chunks.append(_Expression(contents, line))
+
+
+def _handle_intermediate_block(
+    reader: _TemplateReader, operator: str, contents: str, line: int,
+    in_block: str | None, body: _ChunkList
+) -> bool:
+    """Handle intermediate blocks (else, elif, except, finally).
+    
+    Returns True if this was an intermediate block, False otherwise.
+    """
+    intermediate_blocks = {
+        "else": {"if", "for", "while", "try"},
+        "elif": {"if"},
+        "except": {"try"},
+        "finally": {"try"},
+    }
+    allowed_parents = intermediate_blocks.get(operator)
+    if allowed_parents is None:
+        return False
+    
+    if not in_block:
+        reader.raise_parse_error(f"{operator} outside {allowed_parents} block")
+    if in_block not in allowed_parents:
+        reader.raise_parse_error(
+            f"{operator} block cannot be attached to {in_block} block"
+        )
+    body.chunks.append(_IntermediateControlBlock(contents, line))
+    return True
+
+
+def _handle_extends(reader: _TemplateReader, suffix: str, line: int) -> _Node:
+    """Handle extends directive."""
+    suffix = suffix.strip('"').strip("'")
+    if not suffix:
+        reader.raise_parse_error("extends missing file path")
+    return _ExtendsBlock(suffix)
+
+
+def _handle_import_from(contents: str, line: int) -> _Node:
+    """Handle import and from directives."""
+    return _Statement(contents, line)
+
+
+def _handle_include(reader: _TemplateReader, suffix: str, line: int) -> _Node:
+    """Handle include directive."""
+    suffix = suffix.strip('"').strip("'")
+    if not suffix:
+        reader.raise_parse_error("include missing file path")
+    return _IncludeBlock(suffix, reader, line)
+
+
+def _handle_set(reader: _TemplateReader, suffix: str, line: int) -> _Node:
+    """Handle set directive."""
+    if not suffix:
+        reader.raise_parse_error("set missing statement")
+    return _Statement(suffix, line)
+
+
+def _handle_autoescape(suffix: str, template: Template) -> None:
+    """Handle autoescape directive."""
+    fn: str | None = suffix.strip()
+    if fn == "None":
+        fn = None
+    template.autoescape = fn
+
+
+def _handle_whitespace(reader: _TemplateReader, suffix: str) -> None:
+    """Handle whitespace directive."""
+    mode = suffix.strip()
+    # Validate the selected mode
+    filter_whitespace(mode, "")
+    reader.whitespace = mode
+
+
+def _handle_raw(suffix: str, line: int) -> _Node:
+    """Handle raw directive."""
+    return _Expression(suffix, line, raw=True)
+
+
+def _handle_module(suffix: str, line: int) -> _Node:
+    """Handle module directive."""
+    return _Module(suffix, line)
+
+
+def _handle_simple_operators(
+    reader: _TemplateReader,
+    operator: str,
+    suffix: str,
+    contents: str,
+    line: int,
+    template: Template,
+    body: _ChunkList,
+) -> bool:
+    """Handle simple template directives (extends, include, set, import, etc).
+    
+    Returns True if this was a simple operator, False otherwise.
+    """
+    if operator == "comment":
+        return True
+    
+    if operator == "extends":
+        block = _handle_extends(reader, suffix, line)
+    elif operator in ("import", "from"):
+        if not suffix:
+            reader.raise_parse_error("import missing statement")
+        block = _handle_import_from(contents, line)
+    elif operator == "include":
+        block = _handle_include(reader, suffix, line)
+    elif operator == "set":
+        block = _handle_set(reader, suffix, line)
+    elif operator == "autoescape":
+        _handle_autoescape(suffix, template)
+        return True
+    elif operator == "whitespace":
+        _handle_whitespace(reader, suffix)
+        return True
+    elif operator == "raw":
+        block = _handle_raw(suffix, line)
+    elif operator == "module":
+        block = _handle_module(suffix, line)
+    else:
+        return False
+    
+    body.chunks.append(block)
+    return True
+
+
+def _parse_control_block_body(
+    reader: _TemplateReader, operator: str, template: Template, in_loop: str | None
+) -> _ChunkList:
+    """Parse the inner body of a control block."""
+    if operator in ("for", "while"):
+        return _parse(reader, template, operator, operator)
+    elif operator == "apply":
+        # apply creates a nested function so syntactically it's not in the loop.
+        return _parse(reader, template, operator, None)
+    else:
+        return _parse(reader, template, operator, in_loop)
+
+
+def _handle_apply(reader: _TemplateReader, suffix: str, line: int, block_body: _ChunkList) -> _Node:
+    """Handle apply directive."""
+    if not suffix:
+        reader.raise_parse_error("apply missing method name")
+    return _ApplyBlock(suffix, line, block_body)
+
+
+def _handle_named_block(reader: _TemplateReader, suffix: str, line: int, template: Template, block_body: _ChunkList) -> _Node:
+    """Handle block directive."""
+    if not suffix:
+        reader.raise_parse_error("block missing name")
+    return _NamedBlock(suffix, block_body, template, line)
+
+
+def _handle_control_operators(
+    reader: _TemplateReader,
+    operator: str,
+    suffix: str,
+    contents: str,
+    line: int,
+    template: Template,
+    in_loop: str | None,
+    body: _ChunkList,
+) -> bool:
+    """Handle control flow operators (apply, block, try, if, for, while).
+    
+    Returns True if this was a control operator, False otherwise.
+    """
+    control_operators = {"apply", "block", "try", "if", "for", "while"}
+    
+    if operator not in control_operators:
+        return False
+    
+    # Parse inner body recursively
+    block_body = _parse_control_block_body(reader, operator, template, in_loop)
+    
+    block: _Node
+    if operator == "apply":
+        block = _handle_apply(reader, suffix, line, block_body)
+    elif operator == "block":
+        block = _handle_named_block(reader, suffix, line, template, block_body)
+    else:
+        block = _ControlBlock(contents, line, block_body)
+    
+    body.chunks.append(block)
+    return True
+
+
 def _parse(
      reader: _TemplateReader,
      template: Template,
@@ -1106,7 +1345,7 @@ def _parse(
      body = _ChunkList([])
      while True:
          # Find next template directive
-         curly = _find_next_directive(reader)
+         curly = _parse_find_token(reader)
          if curly == -1:
              # EOF
              if in_block:

@@ -1285,7 +1285,7 @@ class WebSocketProtocol13(WebSocketProtocol):
 
     async def _parse_frame_header(self) -> tuple[_FrameHeader, int, bool]:
         """Parse WebSocket frame header and return header info, payload length, and is_masked flag.
-        
+
         Returns:
             Tuple of (_FrameHeader, payloadlen, is_masked) or None if frame is invalid.
             Returns on invalid frame by calling _abort() and returning.
@@ -1299,7 +1299,7 @@ class WebSocketProtocol13(WebSocketProtocol):
         reserved_bits = header & self.RSV_MASK
         opcode = header & self.OPCODE_MASK
         opcode_is_control = bool(opcode & 0x8)
-        
+
         # Handle compression flag
         frame_compressed: bool | None = None
         if self._decompressor is not None and opcode != 0:
@@ -1307,6 +1307,10 @@ class WebSocketProtocol13(WebSocketProtocol):
             # but we can't decompress until we have all the frames of
             # the message.
             frame_compressed = bool(reserved_bits & self.RSV1)
+
+    def _validate_frame_header(self, reserved_bits, opcode, opcode_is_control, payloadlen):
+        if self._decompressor is not None and opcode != 0:
+            self._frame_compressed = bool(reserved_bits & self.RSV1)
             reserved_bits &= ~self.RSV1
         
         # Validate reserved bits
@@ -1314,20 +1318,20 @@ class WebSocketProtocol13(WebSocketProtocol):
             # client is using as-yet-undefined extensions; abort
             self._abort()
             return None  # type: ignore
-        
+
         # Extract masked flag and initial payload length
         is_masked = bool(mask_payloadlen & 0x80)
         payloadlen = mask_payloadlen & 0x7F
-        
+
         # Validate control frames
         if opcode_is_control and payloadlen >= 126:
             # control frames must have payload < 126
             self._abort()
             return None  # type: ignore
-        
+
         # Store the compression flag for later use
         self._frame_compressed = frame_compressed
-        
+
         header_info = _FrameHeader(
             is_final_frame=is_final_frame,
             is_masked=is_masked,
@@ -1335,15 +1339,17 @@ class WebSocketProtocol13(WebSocketProtocol):
             opcode_is_control=opcode_is_control,
             frame_compressed=frame_compressed,
         )
-        
+
         return header_info, payloadlen, is_masked
 
     async def _parse_frame_length(self, payloadlen: int) -> int | None:
         """Parse and validate the payload length field.
-        
+
         Handles 7-bit, 16-bit, and 64-bit length encoding.
         Returns the actual payload length or None if frame is invalid.
         """
+
+    async def _resolve_payload_length(self, payloadlen):
         if payloadlen < 126:
             self._frame_length = payloadlen
             return payloadlen
@@ -1353,17 +1359,17 @@ class WebSocketProtocol13(WebSocketProtocol):
         elif payloadlen == 127:
             data = await self._read_bytes(8)
             payloadlen = struct.unpack("!Q", data)[0]
-        
+
         # Check if message exceeds max size
         new_len = payloadlen
         if self._fragmented_message_buffer is not None:
             new_len += len(self._fragmented_message_buffer)
-        
+
         if new_len > self.params.max_message_size:
             self.close(1009, "message too big")
             self._abort()
             return None
-        
+
         return payloadlen
 
     async def _read_frame_payload(self, payloadlen: int, is_masked: bool) -> bytes:
@@ -1376,7 +1382,7 @@ class WebSocketProtocol13(WebSocketProtocol):
         if is_masked:
             assert self._frame_mask is not None
             data = _websocket_mask(self._frame_mask, data)
-        
+
         return data
 
     def _process_frame_data(
@@ -1387,7 +1393,7 @@ class WebSocketProtocol13(WebSocketProtocol):
         data: bytes,
     ) -> tuple[int, bytes] | None:
         """Process frame data based on frame type and state.
-        
+
         Handles control frames, continuation frames, and data frames.
         Returns a tuple of (final_opcode, final_data) or None if frame should not be handled.
         """
@@ -1401,13 +1407,18 @@ class WebSocketProtocol13(WebSocketProtocol):
                 self._abort()
                 return None
             return (opcode, data)
-        
+
         # Handle continuation frame (opcode == 0)
         if opcode == 0:
             if self._fragmented_message_buffer is None:
                 # nothing to continue
                 self._abort()
                 return None
+
+    async def _process_data_frame(self, opcode, is_final_frame, data):
+        if opcode == 0:
+            if self._fragmented_message_buffer is None:
+                return -1, b""
             self._fragmented_message_buffer.extend(data)
             if is_final_frame:
                 final_opcode = self._fragmented_message_opcode
@@ -1416,24 +1427,24 @@ class WebSocketProtocol13(WebSocketProtocol):
                 return (final_opcode, final_data)
             # Frame processed but not yet final
             return None
-        
+
         # Handle new data message (opcodes 1, 2, or other non-control)
         if self._fragmented_message_buffer is not None:
             # can't start new message until the old one is finished
             self._abort()
             return None
-        
+
         if not is_final_frame:
             self._fragmented_message_opcode = opcode
             self._fragmented_message_buffer = bytearray(data)
             return None
-        
+
         # Single-frame message
         return (opcode, data)
 
     async def _receive_frame(self) -> None:
         """Receive and process a WebSocket frame.
-        
+
         This is a high-level orchestration method that delegates to:
         - _parse_frame_header(): Parse frame header
         - _parse_frame_length(): Parse payload length
@@ -1444,17 +1455,17 @@ class WebSocketProtocol13(WebSocketProtocol):
         header_result = await self._parse_frame_header()
         if header_result is None:
             return
-        
+
         header, payloadlen, is_masked = header_result
-        
+
         # Parse and validate payload length
         payloadlen = await self._parse_frame_length(payloadlen)
         if payloadlen is None:
             return
-        
+
         # Read and unmask payload
         data = await self._read_frame_payload(payloadlen, is_masked)
-        
+
         # Process frame data based on type
         result = self._process_frame_data(
             opcode=header.opcode,
@@ -1462,7 +1473,7 @@ class WebSocketProtocol13(WebSocketProtocol):
             is_final_frame=header.is_final_frame,
             data=data,
         )
-        
+
         # Handle final message if ready
         if result is not None:
             opcode, final_data = result
@@ -1471,55 +1482,107 @@ class WebSocketProtocol13(WebSocketProtocol):
                 await handled_future
 
     def _handle_message(self, opcode: int, data: bytes) -> "Optional[Future[None]]":
-        """Execute on_message, returning its Future if it is a coroutine."""
+        """Execute on_message, returning its Future if it is a coroutine.
+        
+        Dispatches to specific handlers based on opcode type.
+        """
         if self.client_terminated:
             return None
 
-        if self._frame_compressed:
-            assert self._decompressor is not None
-            try:
-                data = self._decompressor.decompress(data)
-            except _DecompressTooLargeError:
-                self.close(1009, "message too big after decompression")
-                self._abort()
-                return None
+        # Decompress frame if necessary
+        data = self._decompress_frame_data(data)
+        if data is None:
+            return None
 
+        # Dispatch to appropriate handler based on opcode
+        return self._dispatch_message_handler(opcode, data)
+
+    def _decompress_frame_data(self, data: bytes) -> "Optional[bytes]":
+        """Decompress frame data if frame is compressed.
+        
+        Returns decompressed data, or None if decompression failed.
+        """
+        if not self._frame_compressed:
+            return data
+
+        assert self._decompressor is not None
+        try:
+            return self._decompressor.decompress(data)
+        except _DecompressTooLargeError:
+            self.close(1009, "message too big after decompression")
+            self._abort()
+            return None
+
+    def _dispatch_message_handler(
+        self, opcode: int, data: bytes
+    ) -> "Optional[Future[None]]":
+        """Dispatch message to appropriate handler based on opcode."""
         if opcode == 0x1:
-            # UTF-8 data
-            self._message_bytes_in += len(data)
-            try:
-                decoded = data.decode("utf-8")
-            except UnicodeDecodeError:
-                self._abort()
-                return None
-            return self._run_callback(self.handler.on_message, decoded)
+            return self._handle_text_message(data)
         elif opcode == 0x2:
-            # Binary data
-            self._message_bytes_in += len(data)
-            return self._run_callback(self.handler.on_message, data)
+            return self._handle_binary_message(data)
         elif opcode == 0x8:
-            # Close
-            self.client_terminated = True
-            if len(data) >= 2:
-                self.close_code = struct.unpack(">H", data[:2])[0]
-            if len(data) > 2:
-                self.close_reason = to_unicode(data[2:])
-            # Echo the received close code, if any (RFC 6455 section 5.5.1).
-            self.close(self.close_code)
+            return self._handle_close_message(data)
         elif opcode == 0x9:
-            # Ping
-            try:
-                self._write_frame(True, 0xA, data)
-            except StreamClosedError:
-                self._abort()
-            self._run_callback(self.handler.on_ping, data)
+            return self._handle_ping_message(data)
         elif opcode == 0xA:
-            # Pong
-            self._received_pong = True
-            return self._run_callback(self.handler.on_pong, data)
+            return self._handle_pong_message(data)
         else:
             self._abort()
-        return None
+            return None
+
+    def _handle_text_message(self, data: bytes) -> "Optional[Future[None]]":
+        """Handle text message (opcode 0x1).
+        
+        Attempts to decode data as UTF-8 and pass to on_message callback.
+        """
+        self._message_bytes_in += len(data)
+        try:
+            decoded = data.decode("utf-8")
+        except UnicodeDecodeError:
+            self._abort()
+            return None
+        return self._run_callback(self.handler.on_message, decoded)
+
+    def _handle_binary_message(self, data: bytes) -> "Optional[Future[None]]":
+        """Handle binary message (opcode 0x2).
+        
+        Pass binary data directly to on_message callback.
+        """
+        self._message_bytes_in += len(data)
+        return self._run_callback(self.handler.on_message, data)
+
+    def _handle_close_message(self, data: bytes) -> None:
+        """Handle close message (opcode 0x8).
+        
+        Extracts close code and reason from data, then echoes back.
+        """
+        self.client_terminated = True
+        if len(data) >= 2:
+            self.close_code = struct.unpack(">H", data[:2])[0]
+        if len(data) > 2:
+            self.close_reason = to_unicode(data[2:])
+        # Echo the received close code, if any (RFC 6455 section 5.5.1).
+        self.close(self.close_code)
+
+    def _handle_ping_message(self, data: bytes) -> None:
+        """Handle ping message (opcode 0x9).
+        
+        Responds with a pong frame and calls on_ping callback.
+        """
+        try:
+            self._write_frame(True, 0xA, data)
+        except StreamClosedError:
+            self._abort()
+        self._run_callback(self.handler.on_ping, data)
+
+    def _handle_pong_message(self, data: bytes) -> "Optional[Future[None]]":
+        """Handle pong message (opcode 0xA).
+        
+        Marks that a pong was received and calls on_pong callback.
+        """
+        self._received_pong = True
+        return self._run_callback(self.handler.on_pong, data)
 
     def close(self, code: int | None = None, reason: str | None = None) -> None:
         """Closes the WebSocket connection."""
