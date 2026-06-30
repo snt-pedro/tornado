@@ -1,0 +1,298 @@
+{
+  "tornado/curl_httpclient.py": {
+    "mi": 33.601220547728104,
+    "rank": "A"
+  },
+  "tornado/log.py": {
+    "mi": 59.305168339229894,
+    "rank": "A"
+  },
+  "tornado/locks.py": {
+    "mi": 47.148356618304014,
+    "rank": "A"
+  },
+  "tornado/util.py": {
+    "mi": 51.84329196145396,
+    "rank": "A"
+  },
+  "tornado/auth.py": {
+    "mi": 34.57222823970428,
+    "rank": "A"
+  },
+  "tornado/template.py": {
+    "mi": 22.798656506513147,
+    "rank": "A"
+  },
+  "tornado/concurrent.py": {
+    "mi": 67.75287199335484,
+    "rank": "A"
+  },
+  "tornado/web.py": {
+    "mi": 0.0,
+    "rank": "C"
+  },
+  "tornado/__init__.py": {
+    "mi": 97.68082796350069,
+    "rank": "A"
+  },
+  "tornado/gen.py": {
+    "mi": 43.85719130225384,
+    "rank": "A"
+  },
+  "tornado/locale.py": {
+    "mi": 41.356132745829406,
+    "rank": "A"
+  },
+  "tornado/options.py": {
+    "mi": 38.619291590144016,
+    "rank": "A"
+  },
+  "tornado/httpserver.py": {
+    "mi": 60.61941337226618,
+    "rank": "A"
+  },
+  "tornado/httputil.py": {
+    "mi": 21.455421124572663,
+    "rank": "A"
+  },
+  "tornado/ioloop.py": {
+    "mi": 33.1906355941428,
+    "rank": "A"
+  },
+  "tornado/httpclient.py": {
+    "mi": 44.57161553830532,
+    "rank": "A"
+  },
+  "tornado/tcpclient.py": {
+    "mi": 54.2826914592577,
+    "rank": "A"
+  },
+  "tornado/escape.py": {
+    "mi": 55.64658266098929,
+    "rank": "A"
+  },
+  "tornado/websocket.py": {
+    "mi": 4.968663538388212,
+    "rank": "C"
+  },
+  "tornado/http1connection.py": {
+    "mi": 17.85031040594803,
+    "rank": "B"
+  },
+  "tornado/simple_httpclient.py": {
+    "mi": 21.04837538221002,
+    "rank": "A"
+  },
+  "tornado/queues.py": {
+    "mi": 52.235337696862615,
+    "rank": "A"
+  },
+  "tornado/tcpserver.py": {
+    "mi": 59.26097302250059,
+    "rank": "A"
+  },
+  "tornado/routing.py": {
+    "mi": 43.44814174701603,
+    "rank": "A"
+  },
+  "tornado/_locale_data.py": {
+    "mi": 100.0,
+    "rank": "A"
+  },
+  "tornado/wsgi.py": {
+    "mi": 62.74781947422692,
+    "rank": "A"
+  },
+  "tornado/netutil.py": {
+    "mi": 43.498639419192195,
+    "rank": "A"
+  },
+  "tornado/testing.py": {
+    "mi": 38.26312738985997,
+    "rank": "A"
+  },
+  "tornado/autoreload.py": {
+    "mi": 54.48446211021176,
+    "rank": "A"
+  },
+  "tornado/process.py": {
+    "mi": 54.165952570035415,
+    "rank": "A"
+  },
+  "tornado/iostream.py": {
+    "mi": 4.175266097351428,
+    "rank": "C"
+  },
+  "tornado/platform/asyncio.py": {
+    "mi": 38.99358930172236,
+    "rank": "A"
+  },
+  "tornado/platform/__init__.py": {
+    "mi": 100.0,
+    "rank": "A"
+  },
+  "tornado/platform/twisted.py": {
+    "mi": 100.0,
+    "rank": "A"
+  },
+  "tornado/platform/caresresolver.py": {
+    "mi": 68.74035992066102,
+    "rank": "A"
+  },
+  "tornado/test/auth_test.py": {
+    "mi": 27.735018031857106,
+    "rank": "A"
+  },
+  "tornado/test/resolve_test_helper.py": {
+    "mi": 100.0,
+    "rank": "A"
+  },
+  "tornado/test/ioloop_test.py": {
+    "mi": 33.67150531464163,
+    "rank": "A"
+  },
+  "tornado/test/testing_test.py": {
+    "mi": 52.68513703416086,
+    "rank": "A"
+  },
+  "tornado/test/simple_httpclient_test.py": {
+    "mi": 21.64189254319006,
+    "rank": "A"
+  },
+  "tornado/test/gen_test.py": {
+    "mi": 17.29878179838699,
+    "rank": "B"
+  },
+  "tornado/test/template_test.py": {
+    "mi": 39.80045671308782,
+    "rank": "A"
+  },
+  "tornado/test/concurrent_test.py": {
+    "mi": 54.127455287436256,
+    "rank": "A"
+  },
+  "tornado/test/curl_httpclient_test.py": {
+    "mi": 44.673863720244185,
+    "rank": "A"
+  },
+  "tornado/test/util.py": {
+    "mi": 74.01185736217779,
+    "rank": "A"
+  },
+  "tornado/test/log_test.py": {
+    "mi": 57.31743072389412,
+    "rank": "A"
+  },
+  "tornado/test/twisted_test.py": {
+    "mi": 81.35347836554521,
+    "rank": "A"
+  },
+  "tornado/test/__init__.py": {
+    "mi": 100.0,
+    "rank": "A"
+  },
+  "tornado/test/httpclient_test.py": {
+    "mi": 26.966696525085673,
+    "rank": "A"
+  },
+  "tornado/test/httpserver_test.py": {
+    "mi": 11.147289894490404,
+    "rank": "B"
+  },
+  "tornado/test/locale_test.py": {
+    "mi": 51.699059617678074,
+    "rank": "A"
+  },
+  "tornado/test/locks_test.py": {
+    "mi": 43.110188761549146,
+    "rank": "A"
+  },
+  "tornado/test/tcpserver_test.py": {
+    "mi": 59.19554377526145,
+    "rank": "A"
+  },
+  "tornado/test/queues_test.py": {
+    "mi": 44.548448739453626,
+    "rank": "A"
+  },
+  "tornado/test/autoreload_test.py": {
+    "mi": 62.73229793217292,
+    "rank": "A"
+  },
+  "tornado/test/runtests.py": {
+    "mi": 59.36285971117385,
+    "rank": "A"
+  },
+  "tornado/test/circlerefs_test.py": {
+    "mi": 61.97794496424644,
+    "rank": "A"
+  },
+  "tornado/test/httputil_test.py": {
+    "mi": 36.51387620808193,
+    "rank": "A"
+  },
+  "tornado/test/iostream_test.py": {
+    "mi": 19.338979537702087,
+    "rank": "A"
+  },
+  "tornado/test/options_test.py": {
+    "mi": 50.982155588932734,
+    "rank": "A"
+  },
+  "tornado/test/routing_test.py": {
+    "mi": 48.11345228618654,
+    "rank": "A"
+  },
+  "tornado/test/wsgi_test.py": {
+    "mi": 58.80800645893888,
+    "rank": "A"
+  },
+  "tornado/test/escape_test.py": {
+    "mi": 65.24732395209242,
+    "rank": "A"
+  },
+  "tornado/test/process_test.py": {
+    "mi": 60.149088648056434,
+    "rank": "A"
+  },
+  "tornado/test/netutil_test.py": {
+    "mi": 52.79823259284182,
+    "rank": "A"
+  },
+  "tornado/test/__main__.py": {
+    "mi": 100.0,
+    "rank": "A"
+  },
+  "tornado/test/util_test.py": {
+    "mi": 56.56533988369178,
+    "rank": "A"
+  },
+  "tornado/test/asyncio_test.py": {
+    "mi": 62.80607126978237,
+    "rank": "A"
+  },
+  "tornado/test/websocket_test.py": {
+    "mi": 19.807749365106986,
+    "rank": "A"
+  },
+  "tornado/test/http1connection_test.py": {
+    "mi": 70.819817454466,
+    "rank": "A"
+  },
+  "tornado/test/import_test.py": {
+    "mi": 100.0,
+    "rank": "A"
+  },
+  "tornado/test/tcpclient_test.py": {
+    "mi": 45.122261394313284,
+    "rank": "A"
+  },
+  "tornado/test/web_test.py": {
+    "mi": 0.0,
+    "rank": "C"
+  },
+  "tornado/test/gettext_translations/extract_me.py": {
+    "mi": 100.0,
+    "rank": "A"
+  }
+}

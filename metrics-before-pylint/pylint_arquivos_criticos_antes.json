@@ -1,0 +1,505 @@
+[
+  {
+    "arquivo": "tornado/test/web_test.py",
+    "convention": 482,
+    "total": 740,
+    "warning": 165,
+    "refactor": 87,
+    "error": 6
+  },
+  {
+    "arquivo": "tornado/test/httpserver_test.py",
+    "convention": 146,
+    "total": 209,
+    "warning": 50,
+    "refactor": 13
+  },
+  {
+    "arquivo": "tornado/test/websocket_test.py",
+    "warning": 75,
+    "total": 207,
+    "convention": 117,
+    "refactor": 15
+  },
+  {
+    "arquivo": "tornado/web.py",
+    "convention": 45,
+    "total": 179,
+    "warning": 96,
+    "refactor": 34,
+    "error": 4
+  },
+  {
+    "arquivo": "tornado/test/auth_test.py",
+    "warning": 42,
+    "total": 165,
+    "convention": 95,
+    "error": 2,
+    "refactor": 26
+  },
+  {
+    "arquivo": "tornado/test/simple_httpclient_test.py",
+    "convention": 119,
+    "total": 159,
+    "warning": 36,
+    "refactor": 4
+  },
+  {
+    "arquivo": "tornado/test/httpclient_test.py",
+    "convention": 114,
+    "total": 158,
+    "warning": 29,
+    "refactor": 13,
+    "error": 2
+  },
+  {
+    "arquivo": "tornado/test/gen_test.py",
+    "convention": 107,
+    "total": 153,
+    "warning": 31,
+    "refactor": 11,
+    "error": 4
+  },
+  {
+    "arquivo": "tornado/test/ioloop_test.py",
+    "convention": 63,
+    "total": 121,
+    "warning": 33,
+    "error": 24,
+    "refactor": 1
+  },
+  {
+    "arquivo": "tornado/test/iostream_test.py",
+    "convention": 88,
+    "total": 118,
+    "refactor": 6,
+    "warning": 24
+  },
+  {
+    "arquivo": "tornado/platform/asyncio.py",
+    "convention": 10,
+    "total": 88,
+    "refactor": 2,
+    "warning": 76
+  },
+  {
+    "arquivo": "tornado/websocket.py",
+    "convention": 37,
+    "total": 83,
+    "warning": 29,
+    "refactor": 17
+  },
+  {
+    "arquivo": "tornado/test/util_test.py",
+    "convention": 46,
+    "total": 82,
+    "error": 15,
+    "warning": 14,
+    "refactor": 7
+  },
+  {
+    "arquivo": "tornado/test/httputil_test.py",
+    "convention": 66,
+    "total": 68,
+    "refactor": 1,
+    "warning": 1
+  },
+  {
+    "arquivo": "tornado/test/locks_test.py",
+    "convention": 53,
+    "total": 61,
+    "warning": 7,
+    "error": 1
+  },
+  {
+    "arquivo": "tornado/httputil.py",
+    "convention": 27,
+    "total": 59,
+    "warning": 21,
+    "refactor": 11
+  },
+  {
+    "arquivo": "tornado/test/tcpclient_test.py",
+    "convention": 45,
+    "total": 56,
+    "warning": 8,
+    "refactor": 2,
+    "error": 1
+  },
+  {
+    "arquivo": "tornado/template.py",
+    "convention": 30,
+    "total": 54,
+    "refactor": 10,
+    "warning": 9,
+    "error": 5
+  },
+  {
+    "arquivo": "tornado/test/queues_test.py",
+    "convention": 39,
+    "total": 53,
+    "warning": 14
+  },
+  {
+    "arquivo": "tornado/test/template_test.py",
+    "convention": 49,
+    "total": 51,
+    "refactor": 1,
+    "error": 1
+  },
+  {
+    "arquivo": "tornado/simple_httpclient.py",
+    "warning": 28,
+    "total": 49,
+    "convention": 9,
+    "refactor": 12
+  },
+  {
+    "arquivo": "tornado/test/testing_test.py",
+    "convention": 42,
+    "total": 49,
+    "error": 2,
+    "warning": 5
+  },
+  {
+    "arquivo": "tornado/autoreload.py",
+    "convention": 23,
+    "total": 44,
+    "warning": 15,
+    "error": 2,
+    "refactor": 4
+  },
+  {
+    "arquivo": "tornado/options.py",
+    "warning": 13,
+    "total": 42,
+    "convention": 22,
+    "refactor": 7
+  },
+  {
+    "arquivo": "tornado/test/concurrent_test.py",
+    "convention": 31,
+    "total": 42,
+    "warning": 3,
+    "refactor": 6,
+    "error": 2
+  },
+  {
+    "arquivo": "tornado/http1connection.py",
+    "warning": 19,
+    "total": 41,
+    "refactor": 10,
+    "convention": 12
+  },
+  {
+    "arquivo": "tornado/test/curl_httpclient_test.py",
+    "convention": 26,
+    "total": 41,
+    "error": 1,
+    "refactor": 5,
+    "warning": 9
+  },
+  {
+    "arquivo": "tornado/iostream.py",
+    "convention": 9,
+    "total": 40,
+    "warning": 19,
+    "refactor": 11,
+    "error": 1
+  },
+  {
+    "arquivo": "tornado/test/routing_test.py",
+    "convention": 29,
+    "total": 39,
+    "warning": 9,
+    "refactor": 1
+  },
+  {
+    "arquivo": "tornado/netutil.py",
+    "warning": 24,
+    "total": 38,
+    "refactor": 5,
+    "error": 7,
+    "convention": 2
+  },
+  {
+    "arquivo": "tornado/test/asyncio_test.py",
+    "convention": 26,
+    "total": 38,
+    "error": 1,
+    "warning": 11
+  },
+  {
+    "arquivo": "tornado/test/options_test.py",
+    "convention": 29,
+    "total": 37,
+    "refactor": 2,
+    "error": 2,
+    "warning": 4
+  },
+  {
+    "arquivo": "tornado/util.py",
+    "warning": 20,
+    "total": 34,
+    "convention": 10,
+    "refactor": 4
+  },
+  {
+    "arquivo": "tornado/ioloop.py",
+    "convention": 16,
+    "total": 33,
+    "warning": 10,
+    "refactor": 4,
+    "error": 3
+  },
+  {
+    "arquivo": "tornado/curl_httpclient.py",
+    "warning": 17,
+    "total": 30,
+    "error": 1,
+    "convention": 8,
+    "refactor": 4
+  },
+  {
+    "arquivo": "tornado/gen.py",
+    "warning": 15,
+    "total": 30,
+    "convention": 10,
+    "refactor": 5
+  },
+  {
+    "arquivo": "tornado/tcpclient.py",
+    "warning": 4,
+    "total": 30,
+    "refactor": 4,
+    "error": 10,
+    "convention": 12
+  },
+  {
+    "arquivo": "tornado/testing.py",
+    "warning": 11,
+    "total": 29,
+    "convention": 10,
+    "error": 2,
+    "refactor": 6
+  },
+  {
+    "arquivo": "tornado/httpclient.py",
+    "warning": 7,
+    "total": 28,
+    "convention": 10,
+    "refactor": 11
+  },
+  {
+    "arquivo": "tornado/test/circlerefs_test.py",
+    "convention": 20,
+    "total": 27,
+    "refactor": 2,
+    "warning": 5
+  },
+  {
+    "arquivo": "tornado/test/escape_test.py",
+    "convention": 27,
+    "total": 27
+  },
+  {
+    "arquivo": "tornado/auth.py",
+    "convention": 6,
+    "total": 25,
+    "warning": 8,
+    "refactor": 11
+  },
+  {
+    "arquivo": "tornado/test/netutil_test.py",
+    "convention": 19,
+    "total": 24,
+    "warning": 4,
+    "refactor": 1
+  },
+  {
+    "arquivo": "tornado/locale.py",
+    "convention": 6,
+    "total": 22,
+    "warning": 10,
+    "refactor": 6
+  },
+  {
+    "arquivo": "tornado/test/wsgi_test.py",
+    "warning": 4,
+    "total": 21,
+    "convention": 16,
+    "refactor": 1
+  },
+  {
+    "arquivo": "tornado/test/locale_test.py",
+    "warning": 5,
+    "total": 20,
+    "convention": 15
+  },
+  {
+    "arquivo": "tornado/httpserver.py",
+    "warning": 12,
+    "total": 19,
+    "convention": 1,
+    "refactor": 6
+  },
+  {
+    "arquivo": "tornado/test/twisted_test.py",
+    "convention": 14,
+    "total": 19,
+    "warning": 5
+  },
+  {
+    "arquivo": "tornado/test/tcpserver_test.py",
+    "convention": 16,
+    "total": 19,
+    "warning": 3
+  },
+  {
+    "arquivo": "tornado/test/process_test.py",
+    "convention": 14,
+    "total": 19,
+    "warning": 4,
+    "refactor": 1
+  },
+  {
+    "arquivo": "tornado/tcpserver.py",
+    "refactor": 8,
+    "total": 14,
+    "convention": 2,
+    "error": 2,
+    "warning": 2
+  },
+  {
+    "arquivo": "tornado/test/runtests.py",
+    "convention": 10,
+    "total": 14,
+    "warning": 1,
+    "refactor": 3
+  },
+  {
+    "arquivo": "tornado/test/log_test.py",
+    "convention": 8,
+    "total": 13,
+    "warning": 3,
+    "refactor": 1,
+    "fatal": 1
+  },
+  {
+    "arquivo": "tornado/queues.py",
+    "warning": 2,
+    "total": 11,
+    "refactor": 3,
+    "convention": 6
+  },
+  {
+    "arquivo": "tornado/test/autoreload_test.py",
+    "convention": 8,
+    "total": 11,
+    "warning": 2,
+    "refactor": 1
+  },
+  {
+    "arquivo": "tornado/test/import_test.py",
+    "convention": 9,
+    "total": 11,
+    "refactor": 2
+  },
+  {
+    "arquivo": "tornado/concurrent.py",
+    "convention": 4,
+    "total": 10,
+    "warning": 5,
+    "refactor": 1
+  },
+  {
+    "arquivo": "tornado/log.py",
+    "convention": 6,
+    "total": 9,
+    "warning": 3
+  },
+  {
+    "arquivo": "tornado/process.py",
+    "convention": 2,
+    "total": 9,
+    "warning": 4,
+    "refactor": 3
+  },
+  {
+    "arquivo": "tornado/platform/caresresolver.py",
+    "convention": 4,
+    "total": 9,
+    "error": 1,
+    "refactor": 1,
+    "warning": 3
+  },
+  {
+    "arquivo": "tornado/test/http1connection_test.py",
+    "convention": 6,
+    "total": 9,
+    "warning": 3
+  },
+  {
+    "arquivo": "tornado/escape.py",
+    "convention": 4,
+    "total": 8,
+    "refactor": 3,
+    "warning": 1
+  },
+  {
+    "arquivo": "tornado/routing.py",
+    "refactor": 2,
+    "total": 8,
+    "convention": 5,
+    "warning": 1
+  },
+  {
+    "arquivo": "tornado/platform/twisted.py",
+    "error": 3,
+    "total": 8,
+    "warning": 4,
+    "convention": 1
+  },
+  {
+    "arquivo": "tornado/locks.py",
+    "convention": 3,
+    "total": 7,
+    "refactor": 2,
+    "warning": 2
+  },
+  {
+    "arquivo": "tornado/test/util.py",
+    "convention": 5,
+    "total": 7,
+    "warning": 1,
+    "refactor": 1
+  },
+  {
+    "arquivo": "tornado/__init__.py",
+    "convention": 6,
+    "total": 6
+  },
+  {
+    "arquivo": "tornado/wsgi.py",
+    "convention": 3,
+    "total": 6,
+    "refactor": 1,
+    "warning": 2
+  },
+  {
+    "arquivo": "tornado/speedups.pyi",
+    "convention": 2,
+    "total": 4,
+    "warning": 2
+  },
+  {
+    "arquivo": "tornado/test/__main__.py",
+    "warning": 2,
+    "total": 2
+  },
+  {
+    "arquivo": "tornado/test/resolve_test_helper.py",
+    "convention": 1,
+    "total": 1
+  }
+]

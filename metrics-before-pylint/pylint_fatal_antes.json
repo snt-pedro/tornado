@@ -1,0 +1,15 @@
+[
+  {
+    "type": "fatal",
+    "module": "tornado.test.log_test",
+    "obj": "",
+    "line": 1,
+    "column": 0,
+    "endLine": null,
+    "endColumn": null,
+    "path": "tornado/test/log_test.py",
+    "symbol": "astroid-error",
+    "message": "tornado/test/log_test.py: Fatal error while checking 'tornado/test/log_test.py'. Please open an issue in our bug tracker so we address this. There is a pre-filled template that you can use in '/home/snt-pedro/.cache/pylint/pylint-crash-2026-06-21-15-10-53.txt'.",
+    "message-id": "F0002"
+  }
+]

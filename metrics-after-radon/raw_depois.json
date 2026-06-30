@@ -1,0 +1,668 @@
+{
+  "tornado/curl_httpclient.py": {
+    "loc": 707,
+    "lloc": 402,
+    "sloc": 519,
+    "comments": 96,
+    "multi": 13,
+    "blank": 71,
+    "single_comments": 104
+  },
+  "tornado/log.py": {
+    "loc": 344,
+    "lloc": 127,
+    "sloc": 204,
+    "comments": 52,
+    "multi": 52,
+    "blank": 45,
+    "single_comments": 43
+  },
+  "tornado/locks.py": {
+    "loc": 566,
+    "lloc": 183,
+    "sloc": 194,
+    "comments": 25,
+    "multi": 210,
+    "blank": 134,
+    "single_comments": 28
+  },
+  "tornado/util.py": {
+    "loc": 436,
+    "lloc": 206,
+    "sloc": 193,
+    "comments": 44,
+    "multi": 108,
+    "blank": 89,
+    "single_comments": 46
+  },
+  "tornado/auth.py": {
+    "loc": 1244,
+    "lloc": 425,
+    "sloc": 655,
+    "comments": 36,
+    "multi": 370,
+    "blank": 191,
+    "single_comments": 28
+  },
+  "tornado/template.py": {
+    "loc": 1419,
+    "lloc": 713,
+    "sloc": 834,
+    "comments": 77,
+    "multi": 235,
+    "blank": 257,
+    "single_comments": 93
+  },
+  "tornado/concurrent.py": {
+    "loc": 266,
+    "lloc": 94,
+    "sloc": 103,
+    "comments": 21,
+    "multi": 73,
+    "blank": 72,
+    "single_comments": 18
+  },
+  "tornado/web.py": {
+    "loc": 4251,
+    "lloc": 1872,
+    "sloc": 2177,
+    "comments": 299,
+    "multi": 1038,
+    "blank": 724,
+    "single_comments": 312
+  },
+  "tornado/__init__.py": {
+    "loc": 67,
+    "lloc": 10,
+    "sloc": 38,
+    "comments": 21,
+    "multi": 0,
+    "blank": 7,
+    "single_comments": 22
+  },
+  "tornado/gen.py": {
+    "loc": 888,
+    "lloc": 373,
+    "sloc": 404,
+    "comments": 71,
+    "multi": 244,
+    "blank": 178,
+    "single_comments": 62
+  },
+  "tornado/locale.py": {
+    "loc": 635,
+    "lloc": 278,
+    "sloc": 374,
+    "comments": 35,
+    "multi": 127,
+    "blank": 95,
+    "single_comments": 39
+  },
+  "tornado/options.py": {
+    "loc": 768,
+    "lloc": 302,
+    "sloc": 393,
+    "comments": 28,
+    "multi": 198,
+    "blank": 145,
+    "single_comments": 32
+  },
+  "tornado/httpserver.py": {
+    "loc": 405,
+    "lloc": 135,
+    "sloc": 193,
+    "comments": 41,
+    "multi": 105,
+    "blank": 67,
+    "single_comments": 40
+  },
+  "tornado/httputil.py": {
+    "loc": 1566,
+    "lloc": 675,
+    "sloc": 699,
+    "comments": 149,
+    "multi": 412,
+    "blank": 299,
+    "single_comments": 156
+  },
+  "tornado/ioloop.py": {
+    "loc": 978,
+    "lloc": 341,
+    "sloc": 351,
+    "comments": 101,
+    "multi": 337,
+    "blank": 185,
+    "single_comments": 105
+  },
+  "tornado/httpclient.py": {
+    "loc": 1058,
+    "lloc": 398,
+    "sloc": 428,
+    "comments": 44,
+    "multi": 389,
+    "blank": 189,
+    "single_comments": 52
+  },
+  "tornado/tcpclient.py": {
+    "loc": 341,
+    "lloc": 167,
+    "sloc": 216,
+    "comments": 36,
+    "multi": 42,
+    "blank": 44,
+    "single_comments": 39
+  },
+  "tornado/escape.py": {
+    "loc": 415,
+    "lloc": 161,
+    "sloc": 160,
+    "comments": 46,
+    "multi": 106,
+    "blank": 101,
+    "single_comments": 48
+  },
+  "tornado/websocket.py": {
+    "loc": 2085,
+    "lloc": 1044,
+    "sloc": 1199,
+    "comments": 119,
+    "multi": 389,
+    "blank": 375,
+    "single_comments": 122
+  },
+  "tornado/http1connection.py": {
+    "loc": 1243,
+    "lloc": 673,
+    "sloc": 820,
+    "comments": 140,
+    "multi": 133,
+    "blank": 152,
+    "single_comments": 138
+  },
+  "tornado/simple_httpclient.py": {
+    "loc": 1316,
+    "lloc": 717,
+    "sloc": 888,
+    "comments": 92,
+    "multi": 142,
+    "blank": 188,
+    "single_comments": 98
+  },
+  "tornado/queues.py": {
+    "loc": 418,
+    "lloc": 169,
+    "sloc": 155,
+    "comments": 20,
+    "multi": 139,
+    "blank": 102,
+    "single_comments": 22
+  },
+  "tornado/tcpserver.py": {
+    "loc": 416,
+    "lloc": 119,
+    "sloc": 173,
+    "comments": 31,
+    "multi": 138,
+    "blank": 70,
+    "single_comments": 35
+  },
+  "tornado/routing.py": {
+    "loc": 722,
+    "lloc": 260,
+    "sloc": 299,
+    "comments": 29,
+    "multi": 225,
+    "blank": 162,
+    "single_comments": 36
+  },
+  "tornado/_locale_data.py": {
+    "loc": 80,
+    "lloc": 3,
+    "sloc": 64,
+    "comments": 13,
+    "multi": 0,
+    "blank": 2,
+    "single_comments": 14
+  },
+  "tornado/wsgi.py": {
+    "loc": 266,
+    "lloc": 106,
+    "sloc": 143,
+    "comments": 22,
+    "multi": 65,
+    "blank": 38,
+    "single_comments": 20
+  },
+  "tornado/netutil.py": {
+    "loc": 745,
+    "lloc": 273,
+    "sloc": 318,
+    "comments": 124,
+    "multi": 164,
+    "blank": 142,
+    "single_comments": 121
+  },
+  "tornado/testing.py": {
+    "loc": 870,
+    "lloc": 325,
+    "sloc": 379,
+    "comments": 81,
+    "multi": 257,
+    "blank": 157,
+    "single_comments": 77
+  },
+  "tornado/autoreload.py": {
+    "loc": 480,
+    "lloc": 222,
+    "sloc": 224,
+    "comments": 99,
+    "multi": 80,
+    "blank": 78,
+    "single_comments": 98
+  },
+  "tornado/process.py": {
+    "loc": 356,
+    "lloc": 191,
+    "sloc": 194,
+    "comments": 33,
+    "multi": 75,
+    "blank": 57,
+    "single_comments": 30
+  },
+  "tornado/iostream.py": {
+    "loc": 1792,
+    "lloc": 929,
+    "sloc": 923,
+    "comments": 228,
+    "multi": 373,
+    "blank": 263,
+    "single_comments": 233
+  },
+  "tornado/platform/asyncio.py": {
+    "loc": 772,
+    "lloc": 379,
+    "sloc": 431,
+    "comments": 117,
+    "multi": 95,
+    "blank": 133,
+    "single_comments": 113
+  },
+  "tornado/platform/__init__.py": {
+    "loc": 0,
+    "lloc": 0,
+    "sloc": 0,
+    "comments": 0,
+    "multi": 0,
+    "blank": 0,
+    "single_comments": 0
+  },
+  "tornado/platform/twisted.py": {
+    "loc": 63,
+    "lloc": 24,
+    "sloc": 21,
+    "comments": 15,
+    "multi": 13,
+    "blank": 16,
+    "single_comments": 13
+  },
+  "tornado/platform/caresresolver.py": {
+    "loc": 93,
+    "lloc": 60,
+    "sloc": 65,
+    "comments": 2,
+    "multi": 15,
+    "blank": 12,
+    "single_comments": 1
+  },
+  "tornado/test/auth_test.py": {
+    "loc": 629,
+    "lloc": 333,
+    "sloc": 513,
+    "comments": 34,
+    "multi": 0,
+    "blank": 87,
+    "single_comments": 29
+  },
+  "tornado/test/resolve_test_helper.py": {
+    "loc": 10,
+    "lloc": 5,
+    "sloc": 4,
+    "comments": 4,
+    "multi": 0,
+    "blank": 2,
+    "single_comments": 4
+  },
+  "tornado/test/ioloop_test.py": {
+    "loc": 807,
+    "lloc": 537,
+    "sloc": 568,
+    "comments": 95,
+    "multi": 10,
+    "blank": 140,
+    "single_comments": 89
+  },
+  "tornado/test/testing_test.py": {
+    "loc": 341,
+    "lloc": 226,
+    "sloc": 231,
+    "comments": 30,
+    "multi": 11,
+    "blank": 71,
+    "single_comments": 28
+  },
+  "tornado/test/simple_httpclient_test.py": {
+    "loc": 885,
+    "lloc": 555,
+    "sloc": 668,
+    "comments": 68,
+    "multi": 0,
+    "blank": 155,
+    "single_comments": 62
+  },
+  "tornado/test/gen_test.py": {
+    "loc": 1111,
+    "lloc": 789,
+    "sloc": 830,
+    "comments": 82,
+    "multi": 0,
+    "blank": 203,
+    "single_comments": 78
+  },
+  "tornado/test/template_test.py": {
+    "loc": 502,
+    "lloc": 257,
+    "sloc": 409,
+    "comments": 24,
+    "multi": 0,
+    "blank": 71,
+    "single_comments": 22
+  },
+  "tornado/test/concurrent_test.py": {
+    "loc": 231,
+    "lloc": 168,
+    "sloc": 167,
+    "comments": 20,
+    "multi": 0,
+    "blank": 44,
+    "single_comments": 20
+  },
+  "tornado/test/curl_httpclient_test.py": {
+    "loc": 239,
+    "lloc": 139,
+    "sloc": 189,
+    "comments": 11,
+    "multi": 0,
+    "blank": 40,
+    "single_comments": 10
+  },
+  "tornado/test/util.py": {
+    "loc": 132,
+    "lloc": 63,
+    "sloc": 68,
+    "comments": 20,
+    "multi": 21,
+    "blank": 27,
+    "single_comments": 16
+  },
+  "tornado/test/log_test.py": {
+    "loc": 233,
+    "lloc": 150,
+    "sloc": 167,
+    "comments": 36,
+    "multi": 0,
+    "blank": 29,
+    "single_comments": 37
+  },
+  "tornado/test/twisted_test.py": {
+    "loc": 70,
+    "lloc": 38,
+    "sloc": 38,
+    "comments": 22,
+    "multi": 0,
+    "blank": 12,
+    "single_comments": 20
+  },
+  "tornado/test/__init__.py": {
+    "loc": 0,
+    "lloc": 0,
+    "sloc": 0,
+    "comments": 0,
+    "multi": 0,
+    "blank": 0,
+    "single_comments": 0
+  },
+  "tornado/test/httpclient_test.py": {
+    "loc": 1009,
+    "lloc": 578,
+    "sloc": 724,
+    "comments": 145,
+    "multi": 0,
+    "blank": 152,
+    "single_comments": 133
+  },
+  "tornado/test/httpserver_test.py": {
+    "loc": 1511,
+    "lloc": 889,
+    "sloc": 1179,
+    "comments": 84,
+    "multi": 13,
+    "blank": 238,
+    "single_comments": 81
+  },
+  "tornado/test/locale_test.py": {
+    "loc": 159,
+    "lloc": 91,
+    "sloc": 133,
+    "comments": 5,
+    "multi": 0,
+    "blank": 21,
+    "single_comments": 5
+  },
+  "tornado/test/locks_test.py": {
+    "loc": 534,
+    "lloc": 372,
+    "sloc": 371,
+    "comments": 65,
+    "multi": 5,
+    "blank": 97,
+    "single_comments": 61
+  },
+  "tornado/test/tcpserver_test.py": {
+    "loc": 220,
+    "lloc": 115,
+    "sloc": 174,
+    "comments": 17,
+    "multi": 0,
+    "blank": 30,
+    "single_comments": 16
+  },
+  "tornado/test/queues_test.py": {
+    "loc": 431,
+    "lloc": 364,
+    "sloc": 340,
+    "comments": 39,
+    "multi": 0,
+    "blank": 64,
+    "single_comments": 27
+  },
+  "tornado/test/autoreload_test.py": {
+    "loc": 264,
+    "lloc": 87,
+    "sloc": 188,
+    "comments": 36,
+    "multi": 4,
+    "blank": 36,
+    "single_comments": 36
+  },
+  "tornado/test/runtests.py": {
+    "loc": 222,
+    "lloc": 96,
+    "sloc": 167,
+    "comments": 26,
+    "multi": 0,
+    "blank": 32,
+    "single_comments": 23
+  },
+  "tornado/test/circlerefs_test.py": {
+    "loc": 216,
+    "lloc": 152,
+    "sloc": 146,
+    "comments": 23,
+    "multi": 13,
+    "blank": 33,
+    "single_comments": 24
+  },
+  "tornado/test/httputil_test.py": {
+    "loc": 737,
+    "lloc": 386,
+    "sloc": 554,
+    "comments": 93,
+    "multi": 11,
+    "blank": 93,
+    "single_comments": 79
+  },
+  "tornado/test/iostream_test.py": {
+    "loc": 1419,
+    "lloc": 950,
+    "sloc": 1026,
+    "comments": 199,
+    "multi": 9,
+    "blank": 187,
+    "single_comments": 197
+  },
+  "tornado/test/options_test.py": {
+    "loc": 323,
+    "lloc": 230,
+    "sloc": 258,
+    "comments": 20,
+    "multi": 0,
+    "blank": 45,
+    "single_comments": 20
+  },
+  "tornado/test/routing_test.py": {
+    "loc": 276,
+    "lloc": 149,
+    "sloc": 198,
+    "comments": 11,
+    "multi": 0,
+    "blank": 67,
+    "single_comments": 11
+  },
+  "tornado/test/wsgi_test.py": {
+    "loc": 115,
+    "lloc": 74,
+    "sloc": 92,
+    "comments": 3,
+    "multi": 0,
+    "blank": 20,
+    "single_comments": 3
+  },
+  "tornado/test/escape_test.py": {
+    "loc": 323,
+    "lloc": 64,
+    "sloc": 297,
+    "comments": 35,
+    "multi": 0,
+    "blank": 15,
+    "single_comments": 11
+  },
+  "tornado/test/process_test.py": {
+    "loc": 296,
+    "lloc": 110,
+    "sloc": 234,
+    "comments": 27,
+    "multi": 0,
+    "blank": 36,
+    "single_comments": 26
+  },
+  "tornado/test/netutil_test.py": {
+    "loc": 213,
+    "lloc": 143,
+    "sloc": 157,
+    "comments": 20,
+    "multi": 0,
+    "blank": 37,
+    "single_comments": 19
+  },
+  "tornado/test/__main__.py": {
+    "loc": 10,
+    "lloc": 4,
+    "sloc": 3,
+    "comments": 3,
+    "multi": 0,
+    "blank": 3,
+    "single_comments": 4
+  },
+  "tornado/test/util_test.py": {
+    "loc": 368,
+    "lloc": 232,
+    "sloc": 259,
+    "comments": 36,
+    "multi": 0,
+    "blank": 73,
+    "single_comments": 36
+  },
+  "tornado/test/asyncio_test.py": {
+    "loc": 298,
+    "lloc": 167,
+    "sloc": 188,
+    "comments": 66,
+    "multi": 6,
+    "blank": 43,
+    "single_comments": 61
+  },
+  "tornado/test/websocket_test.py": {
+    "loc": 996,
+    "lloc": 607,
+    "sloc": 743,
+    "comments": 72,
+    "multi": 4,
+    "blank": 184,
+    "single_comments": 65
+  },
+  "tornado/test/http1connection_test.py": {
+    "loc": 60,
+    "lloc": 46,
+    "sloc": 45,
+    "comments": 2,
+    "multi": 0,
+    "blank": 13,
+    "single_comments": 2
+  },
+  "tornado/test/import_test.py": {
+    "loc": 68,
+    "lloc": 20,
+    "sloc": 49,
+    "comments": 6,
+    "multi": 0,
+    "blank": 13,
+    "single_comments": 6
+  },
+  "tornado/test/tcpclient_test.py": {
+    "loc": 430,
+    "lloc": 316,
+    "sloc": 331,
+    "comments": 41,
+    "multi": 0,
+    "blank": 56,
+    "single_comments": 43
+  },
+  "tornado/test/web_test.py": {
+    "loc": 3440,
+    "lloc": 2054,
+    "sloc": 2657,
+    "comments": 218,
+    "multi": 14,
+    "blank": 571,
+    "single_comments": 198
+  },
+  "tornado/test/gettext_translations/extract_me.py": {
+    "loc": 15,
+    "lloc": 5,
+    "sloc": 5,
+    "comments": 14,
+    "multi": 0,
+    "blank": 1,
+    "single_comments": 9
+  }
+}
